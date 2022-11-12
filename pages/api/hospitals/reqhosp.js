@@ -1,6 +1,5 @@
-import initFirebase from "../../../utils/firebaseConfig";
 import { child, getDatabase, set, ref, get } from "firebase/database";
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import initFirebase from "../../../utils/firebaseConfig";
 
 // const app = initFirebase();
 
