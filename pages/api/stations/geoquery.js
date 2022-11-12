@@ -1,7 +1,4 @@
 import initFirebase from "../../../utils/firebaseConfig";
-import { child, getDatabase, set, ref, get } from "firebase/database";
-import { GeoPoint } from 'firebase/firestore/lite';
-import "firebase/firestore";
 import { query, orderBy, startAt, endAt, getFirestore, collection, getDocs } from "firebase/firestore";
 
 // const app = initFirebase();
