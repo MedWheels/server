@@ -33,10 +33,35 @@ export default async function handler(req,res) {
 				res.end();
 				resolve();
 			}
+
 		})
 
 	}
 
-	return;
+	//handling preflight request
+	else if(req.method === "OPTIONS") {
+		var origin = req.headers.origin;
+		console.log("origin: "+origin);
+		return new Promise((resolve, reject) => {
+			if(origin==="http://localhost:3000"){
+				res.status(200);
+				res.end();
+				resolve();
+			}
+			else {
+				res.status(401).send("Unauthenticated request.");
+				res.end();
+				resolve();
+			}
+
+		});
+	}
+
+	else {
+		console.log(req.method);
+		console.log(JSON.stringify(req.headers));
+		res.status(501);
+		return;
+	};
 
 }
