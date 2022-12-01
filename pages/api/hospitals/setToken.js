@@ -1,5 +1,6 @@
 import initFirebase from "../../../utils/firebaseConfig";
 import { query, getFirestore, collection, where, getDocs, updateDoc, serverTimestamp, } from "firebase/firestore";
+import whitelist from '../../../utils/whitelist';
 
 export default async function handler(req,res) {
 
@@ -43,7 +44,8 @@ export default async function handler(req,res) {
 		var origin = req.headers.origin;
 		console.log("origin: "+origin);
 		return new Promise((resolve, reject) => {
-			if(origin==="http://localhost:3000"){
+			// if(origin==="http://localhost:3000"){
+			if (whitelist.includes(origin)){
 				res.status(200);
 				res.end();
 				resolve();
