@@ -75,7 +75,7 @@ export default async function handler(req,res) {
 				  
 				messaging.sendMulticast(message).then((response) => {
 					console.log(response.successCount + ' messages were sent successfully');
-					res.status(200).send(response.successCount +` ${req.body.target} notified successfully.`);
+					res.status(200).json({message: response.successCount +` ${req.body.target} notified successfully.`});
 					res.end();
 					return resolve();
 				}).catch(err => {
