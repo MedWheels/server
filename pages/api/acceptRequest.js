@@ -7,23 +7,18 @@ export default async function handler(req,res) {
 	if(req.method === "POST") {
 		return new Promise((resolve, reject) => {
 			try {
-				const name = req.body.name;
 				const target = req.body.target;
-				const targetUid = req.body.targetUid;
-				const lat = req.body.lat
-				const lng = req.body.lng
-				//user data
 				const uid = req.body.uid;
-				const token = req.body.token; //for notifying
 
 				const app = initFirebase();
 				const db = getDatabase(app);
 				const data = {
-					name:name,
-					targetUid:targetUid,
-					lat:lat,
-					lng:lng,
-					token:token,
+					name:req.body.name,
+					target:req.body.target,
+					targetUid:req.body.targetUid,
+					lat:req.body.lat,
+					lng:req.body.lng,
+					token:req.body.token,
 				}
 				console.log(data)
 				var payload = {}
