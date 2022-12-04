@@ -2,12 +2,14 @@ import initFirebase from "./firebaseConfig";
 import { query, orderBy, startAt, endAt, getFirestore, collection, getDocs } from "firebase/firestore";
 const geofire = require('geofire-common');
 
-async function geoQuery(center,category) {
+async function geoQuery(center,category,round) {
 	try {
 		const app = initFirebase();
 		const db = getFirestore(app);
+		const rounds = [5,10,25];
 		// const center = [12.94375013691914, 77.59832206349157]; //get from request params
-		var radiusInM = 5 * 1000;
+		console.log("round: "+round)
+		var radiusInM = rounds[round] * 1000;
 	
 		// Each item in 'bounds' represents a startAt/endAt pair. We have to issue
 		// a separate query for each pair. There can be up to 9 pairs of bounds
@@ -28,7 +30,8 @@ async function geoQuery(center,category) {
 		
 			for (const snap of snapshots) {
 				for (const doc of snap.docs) {
-					const geopoint = doc.get('geopoint');
+					var data = doc.data();
+					const geopoint = data.geopoint;
 					const lat = geopoint.latitude;
 					const lng = geopoint.longitude;
 			
@@ -37,7 +40,8 @@ async function geoQuery(center,category) {
 					const distanceInKm = geofire.distanceBetween([lat,lng], center);
 					const distanceInM = distanceInKm * 1000;
 					if (distanceInM <= radiusInM) {
-					matchingDocs.push(doc);
+						data["distanceInKm"] = distanceInKm
+						matchingDocs.push(data);
 					}
 				}
 			}
@@ -47,20 +51,22 @@ async function geoQuery(center,category) {
 			// Process the matching documents
 			// ...
 			// var geopoint;
-			var docData = [];
-			for (const doc of matchingDocs){
-				var data = doc.data();
-				const geopoint = data.geopoint;
-				const lat = geopoint.latitude;
-				const lng = geopoint.longitude;
-				data["distanceInKm"] = geofire.distanceBetween([lat,lng], center);
-				docData.push(data);
-				// console.log(`username: ${data.username}, distance: ${distanceInKm} km, location: ${[lat,lng]}`);
-			}
-			// res.status(200).send(matchingDocs);
-			// return matchingDocs;
-			docData.sort((a, b) => a.distanceInKm - b.distanceInKm)
-			return docData;
+			// var docData = [];
+			// for (const doc of matchingDocs){
+			// 	var data = doc.data();
+			// 	const geopoint = data.geopoint;
+			// 	const lat = geopoint.latitude;
+			// 	const lng = geopoint.longitude;
+			// 	data["distanceInKm"] = geofire.distanceBetween([lat,lng], center);
+			// 	docData.push(data);
+			// 	// console.log(`username: ${data.username}, distance: ${distanceInKm} km, location: ${[lat,lng]}`);
+			// }
+			// // res.status(200).send(matchingDocs);
+			// // return matchingDocs;
+			// docData.sort((a, b) => a.distanceInKm - b.distanceInKm)
+			// return docData;
+			matchingDocs.sort((a, b) => a.distanceInKm - b.distanceInKm)
+			return matchingDocs;
 		}).catch((err) => {
 			console.log("doc processing error: "+err);
 			// res.status(500).json({err: String(err)});
