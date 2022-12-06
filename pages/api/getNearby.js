@@ -67,8 +67,8 @@ export default async function handler(req,res) {
 					},
 					data:{
 						uid: req.body.uid,
-						lat: toString(coords.lat),
-						lng: toString(coords.lng),
+						lat: String(coords.lat),
+						lng: String(coords.lng),
 						token: req.body.token,
 						target: req.body.target
 					},
