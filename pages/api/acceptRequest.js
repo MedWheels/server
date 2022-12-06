@@ -36,19 +36,17 @@ export default async function handler(req,res) {
 					resolve();					
 				});
 				
-				console.log(target);
-				if(target==="stations"){
-					update(ref(db, `drivers/driver1`), payload).then(response => {					
-						res.status(200).json({message: "Informed driver successfuly."});
-						res.end();
-						resolve();				
-					}).catch(err => {
-						console.log(err);
-						res.status(500).json({err: String(err)});
-						res.end();
-						resolve();					
-					});
-				}
+				update(ref(db, `drivers/driver1`), payload).then(response => {					
+					res.status(200).json({message: "Informed driver successfuly."});
+					res.end();
+					resolve();				
+				}).catch(err => {
+					console.log(err);
+					res.status(500).json({err: String(err)});
+					res.end();
+					resolve();					
+				});
+
 	
 			} catch (error) {
 				console.log(error);
