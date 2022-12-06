@@ -19,6 +19,8 @@ export default async function handler(req,res) {
 					lat:req.body.lat,
 					lng:req.body.lng,
 					token:req.body.token,
+					userLat:req.body.userLat,
+					userLng:req.body.userLng
 				}
 				console.log(data)
 				var payload = {}
@@ -33,6 +35,19 @@ export default async function handler(req,res) {
 					res.end();
 					resolve();					
 				});
+				
+				// if(target=="stations"){
+				// 	update(ref(db, `drivers/driver1`), payload).then(response => {					
+				// 		res.status(200).json({message: "Informed driver successfuly."});
+				// 		res.end();
+				// 		resolve();				
+				// 	}).catch(err => {
+				// 		console.log(err);
+				// 		res.status(500).json({err: String(err)});
+				// 		res.end();
+				// 		resolve();					
+				// 	});
+				// }
 	
 			} catch (error) {
 				console.log(error);
