@@ -56,28 +56,41 @@ export default async function handler(req,res) {
 				}
 
 
+				console.log(req.body.uid)
+				console.log(coords.lat)
+				console.log(coords.lng)
+
 				const message = {
 					notification:{
 						title:"MedWheels",
-						body:"Click to view",
+						body:"Click to view"
 					},
 					data:{
 						uid: req.body.uid,
+						lat: toString(coords.lat),
+						lng: toString(coords.lng),
 						token: req.body.token,
-						target: req.body.target,
+						target: req.body.target
 					},
 					android:{
 						ttl: 300000
 					},
 					// data: {score: '850', time: '2:45'},
-					tokens: registrationTokens,
+					tokens: registrationTokens
 				};
 				  
 				messaging.sendMulticast(message).then((response) => {
 					console.log(response.successCount + ' messages were sent successfully');
-					res.status(200).json({message: response.successCount +` ${req.body.target} notified successfully.`});
-					res.end();
-					return resolve();
+					if (response.successCount!==0){
+						res.status(200).json({message: response.successCount +` ${req.body.target} notified successfully.`});
+						res.end();
+						return resolve();
+					}
+					else{
+						res.status(204).json({message: `No ${req.body.target} online in the given vicinity radius.`})
+						res.end();
+						return resolve();
+					}
 				}).catch(err => {
 					console.log(err);
 					res.status(500).json({err})
